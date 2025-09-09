@@ -37,12 +37,12 @@ const prompt = ai.definePrompt({
   name: 'generateDataInsightsPrompt',
   input: {schema: GenerateDataInsightsInputSchema},
   output: {schema: GenerateDataInsightsOutputSchema},
-  prompt: `You are an expert statistician. Please analyze the provided data summary and the visualization type to generate key insights.
+  prompt: `Anda adalah seorang ahli statistik. Harap analisis ringkasan data dan jenis visualisasi yang diberikan untuk menghasilkan wawasan utama.
 
-Data Summary: {{{dataSummary}}}
-Visualization Type: {{{visualizationType}}}
+Ringkasan Data: {{{dataSummary}}}
+Jenis Visualisasi: {{{visualizationType}}}
 
-Insights:`,
+Wawasan:`,
 });
 
 const generateDataInsightsFlow = ai.defineFlow(

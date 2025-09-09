@@ -14,40 +14,40 @@ export function StatisticsDisplay({ stats }: StatisticsDisplayProps) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
       <StatCard
-        title="Mean"
+        title="Rata-rata"
         value={mean.toFixed(2)}
         icon={Calculator}
-        description="The average value"
+        description="Nilai rata-rata"
       />
       <StatCard
         title="Median"
         value={median.toFixed(2)}
         icon={GitCommitHorizontal}
-        description="The middle value"
+        description="Nilai tengah"
       />
       <StatCard
-        title="Mode"
+        title="Modus"
         value={modeDisplay}
         icon={Repeat}
-        description="Most frequent value"
+        description="Nilai yang paling sering muncul"
       />
       <StatCard
-        title="Std. Deviation"
+        title="Deviasi Standar"
         value={stdDev.toFixed(2)}
         icon={BarChartHorizontalBig}
-        description="Measure of data spread"
+        description="Ukuran sebaran data"
       />
       <StatCard
-        title="Variance"
+        title="Varians"
         value={variance.toFixed(2)}
         icon={Variable}
-        description="Squared deviation from mean"
+        description="Kuadrat deviasi dari rata-rata"
       />
       <StatCard
-        title="Count"
+        title="Jumlah"
         value={count}
         icon={Calculator}
-        description="Total data points"
+        description="Total titik data"
       />
     </div>
   );

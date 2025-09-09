@@ -41,17 +41,17 @@ const prompt = ai.definePrompt({
   name: 'suggestChartTypePrompt',
   input: {schema: SuggestChartTypeInputSchema},
   output: {schema: SuggestChartTypeOutputSchema},
-  prompt: `You are an expert data visualization consultant. Given a description and sample of data, you will suggest the most appropriate chart type (histogram, pie chart, scatter plot) and explain your reasoning.
+  prompt: `Anda adalah konsultan visualisasi data ahli. Diberikan deskripsi dan sampel data, Anda akan menyarankan jenis bagan yang paling sesuai (histogram, diagram lingkaran, plot sebar) dan menjelaskan alasan Anda.
 
-Data Description: {{{dataDescription}}}
-Data Sample: {{{dataSample}}}
+Deskripsi Data: {{{dataDescription}}}
+Sampel Data: {{{dataSample}}}
 
-Consider the following:
-- Histograms are best for showing the distribution of a single variable.
-- Pie charts are best for showing the proportion of different categories.
-- Scatter plots are best for showing the relationship between two variables.
+Pertimbangkan hal berikut:
+- Histogram paling baik untuk menunjukkan distribusi variabel tunggal.
+- Diagram lingkaran paling baik untuk menunjukkan proporsi berbagai kategori.
+- Plot sebar paling baik untuk menunjukkan hubungan antara dua variabel.
 
-Based on the data description and sample, what chart type is most appropriate? Explain your reasoning.
+Berdasarkan deskripsi dan sampel data, jenis bagan apa yang paling sesuai? Jelaskan alasan Anda.
 `,}
 );
 

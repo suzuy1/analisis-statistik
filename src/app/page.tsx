@@ -51,7 +51,7 @@ export default function Home() {
         error: (error) => {
           toast({
             variant: "destructive",
-            title: "CSV Parsing Error",
+            title: "Kesalahan Parsing CSV",
             description: error.message,
           });
         },
@@ -74,7 +74,7 @@ export default function Home() {
         const nonEmptyData = parsedData.filter((arr) => arr.length > 0);
 
         if (nonEmptyData.length === 0 || nonEmptyData.every(arr => arr.length === 0)) {
-          throw new Error("No valid numeric data found. Please check your input.");
+          throw new Error("Tidak ada data numerik yang valid ditemukan. Silakan periksa masukan Anda.");
         }
         
         setData(nonEmptyData);
@@ -94,12 +94,12 @@ export default function Home() {
         startAiTasks(async () => {
           try {
             const chartTypePromise = suggestChartType({
-              dataDescription: "A series of numbers for statistical analysis.",
+              dataDescription: "Serangkaian angka untuk analisis statistik.",
               dataSample: flatData.slice(0, 20).join(", "),
             });
 
             const insightsPromise = generateDataInsights({
-              dataSummary: `Mean: ${stats.mean.toFixed(2)}, Median: ${stats.median}, Mode: ${stats.mode.join(", ")}, Std Dev: ${stats.stdDev.toFixed(2)}, Variance: ${stats.variance.toFixed(2)}. Total ${stats.count} data points.`,
+              dataSummary: `Rata-rata: ${stats.mean.toFixed(2)}, Median: ${stats.median}, Modus: ${stats.mode.join(", ")}, Deviasi Standar: ${stats.stdDev.toFixed(2)}, Varians: ${stats.variance.toFixed(2)}. Total ${stats.count} titik data.`,
               visualizationType: chartType,
             });
 
@@ -109,7 +109,7 @@ export default function Home() {
             ]);
             
             if (chartSuggestion) {
-              const suggested = chartSuggestion.chartType.toLowerCase().replace(' chart', '');
+              const suggested = chartSuggestion.chartType.toLowerCase().replace(' chart', '').replace(' scatter plot', 'scatter').replace(' pie chart', 'pie');
               setSuggestedChartType(chartSuggestion.chartType);
               if (suggested === 'histogram' || suggested === 'pie' || suggested === 'scatter') {
                 if (suggested === 'scatter' && nonEmptyData.length < 2) {
@@ -127,15 +127,15 @@ export default function Home() {
           } catch (aiError: any) {
             toast({
               variant: "destructive",
-              title: "AI Task Error",
-              description: aiError.message || "Failed to generate AI insights or chart suggestions."
+              title: "Kesalahan Tugas AI",
+              description: aiError.message || "Gagal menghasilkan wawasan AI atau saran bagan."
             });
           }
         });
       } catch (error: any) {
         toast({
           variant: "destructive",
-          title: "Data Processing Error",
+          title: "Kesalahan Pemrosesan Data",
           description: error.message,
         });
         setData([]);
@@ -151,7 +151,7 @@ export default function Home() {
     const content = document.getElementById("pdf-export");
     if (content) {
       try {
-        toast({ title: "Generating PDF...", description: "Please wait a moment." });
+        toast({ title: "Membuat PDF...", description: "Mohon tunggu sebentar." });
         const canvas = await html2canvas(content, {
           scale: 2,
           useCORS: true,
@@ -177,12 +177,12 @@ export default function Home() {
           imgWidth * ratio,
           imgHeight * ratio
         );
-        pdf.save("statviz-report.pdf");
+        pdf.save("laporan-statviz.pdf");
       } catch (error: any) {
         toast({
           variant: "destructive",
-          title: "PDF Export Error",
-          description: error.message || "Could not generate PDF.",
+          title: "Kesalahan Ekspor PDF",
+          description: error.message || "Tidak dapat membuat PDF.",
         });
       }
     }
@@ -200,7 +200,7 @@ export default function Home() {
             </h1>
           </div>
           <div className="flex items-center gap-2">
-            <Button onClick={handleExport}>Export as PDF</Button>
+            <Button onClick={handleExport}>Ekspor sebagai PDF</Button>
           </div>
         </div>
       </header>
@@ -209,10 +209,10 @@ export default function Home() {
           <div className="max-w-7xl mx-auto space-y-8">
             <div className="text-center">
               <h2 className="text-3xl font-bold tracking-tight md:text-4xl font-headline">
-                Interactive Statistics & Visualization
+                Statistik & Visualisasi Interaktif
               </h2>
               <p className="mt-2 text-lg text-muted-foreground">
-                Input your data to instantly calculate key statistics and visualize your dataset.
+                Masukkan data Anda untuk langsung menghitung statistik utama dan memvisualisasikan kumpulan data Anda.
               </p>
             </div>
 
@@ -237,8 +237,8 @@ export default function Home() {
                   ) : (
                     <div className="flex items-center justify-center h-full rounded-lg border-2 border-dashed bg-card/50">
                       <div className="text-center text-muted-foreground">
-                        <p className="font-semibold">Your statistics will appear here.</p>
-                        <p className="text-sm">Enter data and click "Process Data" to get started.</p>
+                        <p className="font-semibold">Statistik Anda akan muncul di sini.</p>
+                        <p className="text-sm">Masukkan data dan klik "Proses Data" untuk memulai.</p>
                       </div>
                     </div>
                   )}
@@ -265,7 +265,7 @@ export default function Home() {
       <footer className="py-6 border-t bg-background/50">
         <div className="container mx-auto px-4 md:px-6">
           <p className="text-center text-sm text-muted-foreground">
-            Built with Next.js and Genkit.
+            Dibuat dengan Next.js dan Genkit.
           </p>
         </div>
       </footer>

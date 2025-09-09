@@ -19,27 +19,27 @@ export function DataInputCard({ dataString, setDataString, onFileUpload, onProce
   return (
     <Card className="h-full flex flex-col">
       <CardHeader>
-        <CardTitle>Data Input</CardTitle>
-        <CardDescription>Enter data manually or upload a CSV file.</CardDescription>
+        <CardTitle>Input Data</CardTitle>
+        <CardDescription>Masukkan data secara manual atau unggah file CSV.</CardDescription>
       </CardHeader>
       <CardContent className="flex-grow">
         <Tabs defaultValue="manual">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="manual">Manual</TabsTrigger>
-            <TabsTrigger value="csv">Upload CSV</TabsTrigger>
+            <TabsTrigger value="csv">Unggah CSV</TabsTrigger>
           </TabsList>
           <TabsContent value="manual" className="mt-4">
-            <Label htmlFor="manual-data">Enter data</Label>
+            <Label htmlFor="manual-data">Masukkan data</Label>
             <Textarea
               id="manual-data"
-              placeholder="Enter comma-separated numbers. Use new lines for multiple datasets (e.g., for scatter plots)."
+              placeholder="Masukkan angka yang dipisahkan koma. Gunakan baris baru untuk beberapa set data (misalnya, untuk scatter plot)."
               value={dataString}
               onChange={(e) => setDataString(e.target.value)}
               className="mt-2 min-h-[200px] font-code"
             />
           </TabsContent>
           <TabsContent value="csv" className="mt-4">
-            <Label htmlFor="csv-file">Upload a .csv file</Label>
+            <Label htmlFor="csv-file">Unggah file .csv</Label>
             <Input
               id="csv-file"
               type="file"
@@ -48,7 +48,7 @@ export function DataInputCard({ dataString, setDataString, onFileUpload, onProce
               className="mt-2"
             />
             <p className="mt-2 text-sm text-muted-foreground">
-              File should contain columns of numeric data.
+              File harus berisi kolom data numerik.
             </p>
           </TabsContent>
         </Tabs>
@@ -56,7 +56,7 @@ export function DataInputCard({ dataString, setDataString, onFileUpload, onProce
       <CardFooter>
         <Button onClick={onProcess} disabled={isProcessing} className="w-full">
           {isProcessing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {isProcessing ? "Processing..." : "Process Data"}
+          {isProcessing ? "Memproses..." : "Proses Data"}
         </Button>
       </CardFooter>
     </Card>

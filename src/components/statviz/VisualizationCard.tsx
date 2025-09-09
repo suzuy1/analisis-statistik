@@ -88,14 +88,14 @@ export function VisualizationCard({ data, chartType, onChartTypeChange, suggeste
   }, [data, chartType]);
 
   const chartConfig = {
-    count: { label: "Count", color: "hsl(var(--chart-1))" },
+    count: { label: "Jumlah", color: "hsl(var(--chart-1))" },
   };
 
   const renderChart = () => {
     if (!chartData || chartData.length === 0) {
       return (
         <div className="flex items-center justify-center h-full text-center text-sm text-muted-foreground">
-          <p>Chart will be displayed here once data is processed.</p>
+          <p>Bagan akan ditampilkan di sini setelah data diproses.</p>
         </div>
       );
     }
@@ -131,7 +131,7 @@ export function VisualizationCard({ data, chartType, onChartTypeChange, suggeste
          if(data.length < 2) {
              return (
                 <div className="flex items-center justify-center h-full text-center text-sm text-muted-foreground">
-                    <p>Scatter plots require at least two columns of data.</p>
+                    <p>Scatter plot membutuhkan setidaknya dua kolom data.</p>
                 </div>
             );
          }
@@ -158,22 +158,22 @@ export function VisualizationCard({ data, chartType, onChartTypeChange, suggeste
       <CardHeader>
         <div className="flex justify-between items-start">
             <div>
-                <CardTitle>Data Visualization</CardTitle>
-                <CardDescription>Visual representation of your dataset.</CardDescription>
+                <CardTitle>Visualisasi Data</CardTitle>
+                <CardDescription>Representasi visual dari kumpulan data Anda.</CardDescription>
             </div>
             <div className="flex flex-col items-end gap-2">
                 <Select value={chartType} onValueChange={(value: ChartType) => onChartTypeChange(value)}>
                     <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Select chart type" />
+                        <SelectValue placeholder="Pilih jenis bagan" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value="histogram">Histogram</SelectItem>
-                        <SelectItem value="pie">Pie Chart</SelectItem>
-                        <SelectItem value="scatter" disabled={data.length < 2}>Scatter Plot</SelectItem>
+                        <SelectItem value="pie">Diagram Lingkaran</SelectItem>
+                        <SelectItem value="scatter" disabled={data.length < 2}>Plot Sebar</SelectItem>
                     </SelectContent>
                 </Select>
                  {suggestedChartType && (
-                    <Badge variant="secondary">AI Suggestion: {suggestedChartType}</Badge>
+                    <Badge variant="secondary">Saran AI: {suggestedChartType.replace('histogram', 'Histogram').replace('pie chart', 'Diagram Lingkaran').replace('scatter plot', 'Plot Sebar')}</Badge>
                 )}
             </div>
         </div>
