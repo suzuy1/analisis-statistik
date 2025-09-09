@@ -7,7 +7,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Image as ImageIcon, FileText } from "lucide-react";
 import type { InputMode, ProblemInputMode } from "@/app/page";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 interface DataInputCardProps {
   dataString: string;
@@ -58,20 +57,16 @@ export function DataInputCard({
   return (
     <Card className="h-full flex flex-col">
       <CardHeader>
-        <CardTitle>Input Data</CardTitle>
-        <CardDescription>Pilih mode input: data mentah atau soal cerita.</CardDescription>
+        <CardTitle>Input</CardTitle>
+        <CardDescription>Pilih mode input, masukkan data, lalu proses.</CardDescription>
       </CardHeader>
-      <CardContent className="flex-grow">
-        <RadioGroup defaultValue="data" value={inputMode} onValueChange={handleModeChange} className="mb-4 flex space-x-4">
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="data" id="data" />
-            <Label htmlFor="data">Data Mentah</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="problem" id="problem" />
-            <Label htmlFor="problem">Soal Cerita</Label>
-          </div>
-        </RadioGroup>
+      <CardContent className="flex-grow flex flex-col">
+        <Tabs value={inputMode} onValueChange={handleModeChange} className="mb-4">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="data">Data Mentah</TabsTrigger>
+            <TabsTrigger value="problem">Soal Cerita</TabsTrigger>
+          </TabsList>
+        </Tabs>
 
         {inputMode === 'data' ? (
           <Tabs defaultValue="manual" className="flex-grow flex flex-col">
@@ -80,7 +75,7 @@ export function DataInputCard({
               <TabsTrigger value="csv">Unggah CSV</TabsTrigger>
             </TabsList>
             <TabsContent value="manual" className="mt-4 flex-grow">
-              <Label htmlFor="manual-data">Masukkan Data</Label>
+              <Label htmlFor="manual-data" className="sr-only">Masukkan Data</Label>
               <Textarea
                 id="manual-data"
                 placeholder="Masukkan angka yang dipisahkan koma. Gunakan baris baru untuk beberapa set data (misalnya, untuk scatter plot)."
@@ -110,7 +105,7 @@ export function DataInputCard({
               <TabsTrigger value="image">Gambar</TabsTrigger>
             </TabsList>
             <TabsContent value="text" className="mt-4 flex-grow">
-              <Label htmlFor="problem-data">Masukkan Soal Cerita</Label>
+              <Label htmlFor="problem-data" className="sr-only">Masukkan Soal Cerita</Label>
               <Textarea
                 id="problem-data"
                 placeholder={manualInputPlaceholder}
