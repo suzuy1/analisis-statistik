@@ -31,7 +31,6 @@ import { StatvizIcon } from "@/components/icons/StatvizIcon";
 import { WordProblemCard } from "@/components/statviz/WordProblemCard";
 import { suggestChartType } from "@/ai/flows/suggest-chart-type";
 import { generateDataInsights } from "@/ai/flows/auto-generate-data-insights";
-import { solveWordProblem } from "@/ai/flows/solve-word-problem";
 import { solveWordProblemFromImage } from "@/ai/flows/solve-word-problem-from-image";
 import type { SolveWordProblemOutput } from "@/ai/schemas/statviz-schemas";
 import { DataTable } from "@/components/statviz/DataTable";
@@ -101,8 +100,20 @@ export default function Home() {
                 toast({ variant: "destructive", title: "Input Kosong", description: "Silakan masukkan soal cerita." });
                 return;
               }
-              const result = await solveWordProblem({ problem: dataString });
+              const response = await fetch('/api/solve-word-problem', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ problem: dataString }),
+              });
+
+              if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+              }
+              
+              const result = await response.json();
               setWordProblemSolution(result);
+
             } else if (problemInputMode === 'image') {
               if (!imageFile) {
                 toast({ variant: "destructive", title: "Input Kosong", description: "Silakan unggah gambar soal cerita." });
@@ -455,5 +466,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
