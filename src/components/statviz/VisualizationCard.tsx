@@ -21,6 +21,9 @@ import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { ChartType } from "@/app/page";
 import { Loader2 } from "lucide-react";
+import { BoxPlotChart } from "./BoxPlotChart";
+import { calculateQuartiles, calculateIQR, calculateMedian } from "@/lib/statistics";
+
 
 interface VisualizationCardProps {
   data: number[][];
@@ -71,6 +74,28 @@ const processForScatter = (data: number[][]) => {
   return Array.from({ length: len }, (_, i) => ({ x: xData[i], y: yData[i] }));
 };
 
+const processForBoxPlot = (data: number[]) => {
+  if (data.length === 0) return [];
+
+  const sortedData = [...data].sort((a, b) => a - b);
+  const min = sortedData[0];
+  const max = sortedData[sortedData.length - 1];
+  const median = calculateMedian(sortedData);
+  const { q1, q3 } = calculateQuartiles(sortedData);
+  const iqr = q3 - q1;
+
+  // Determine outliers
+  const lowerWhisker = Math.max(min, q1 - 1.5 * iqr);
+  const upperWhisker = Math.min(max, q3 + 1.5 * iqr);
+  const outliers = sortedData.filter(d => d < lowerWhisker || d > upperWhisker);
+  
+  return [{
+    name: "Data",
+    box: [lowerWhisker, q1, median, q3, upperWhisker],
+    outliers: outliers.map(o => [0, o]), // Format for recharts scatter
+  }];
+};
+
 export function VisualizationCard({ data, chartType, onChartTypeChange, suggestedChartType, isProcessing }: VisualizationCardProps) {
 
   const chartData = React.useMemo(() => {
@@ -82,6 +107,8 @@ export function VisualizationCard({ data, chartType, onChartTypeChange, suggeste
         return processForPie(data[0]);
       case "scatter":
         return processForScatter(data);
+       case "boxplot":
+        return processForBoxPlot(data[0]);
       default:
         return null;
     }
@@ -148,6 +175,8 @@ export function VisualizationCard({ data, chartType, onChartTypeChange, suggeste
             </ScatterChart>
           </ChartContainer>
         );
+      case "boxplot":
+        return <BoxPlotChart data={chartData as any[]} />;
       default:
         return null;
     }
@@ -170,6 +199,7 @@ export function VisualizationCard({ data, chartType, onChartTypeChange, suggeste
                         <SelectItem value="histogram">Histogram</SelectItem>
                         <SelectItem value="pie">Diagram Lingkaran</SelectItem>
                         <SelectItem value="scatter" disabled={data.length < 2}>Plot Sebar</SelectItem>
+                        <SelectItem value="boxplot">Box Plot</SelectItem>
                     </SelectContent>
                 </Select>
                  {suggestedChartType && (

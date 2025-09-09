@@ -25,7 +25,7 @@ const prompt = ai.definePrompt({
   name: 'suggestChartTypePrompt',
   input: {schema: SuggestChartTypeInputSchema},
   output: {schema: SuggestChartTypeOutputSchema},
-  prompt: `Anda adalah konsultan visualisasi data ahli. Diberikan deskripsi dan sampel data, Anda akan menyarankan jenis bagan yang paling sesuai (histogram, diagram lingkaran, plot sebar) dan menjelaskan alasan Anda.
+  prompt: `Anda adalah konsultan visualisasi data ahli. Diberikan deskripsi dan sampel data, Anda akan menyarankan jenis bagan yang paling sesuai (histogram, diagram lingkaran, plot sebar, boxplot) dan menjelaskan alasan Anda.
 
 Deskripsi Data: {{{dataDescription}}}
 Sampel Data: {{{dataSample}}}
@@ -34,6 +34,7 @@ Pertimbangkan hal berikut:
 - Histogram paling baik untuk menunjukkan distribusi variabel tunggal.
 - Diagram lingkaran paling baik untuk menunjukkan proporsi berbagai kategori.
 - Plot sebar paling baik untuk menunjukkan hubungan antara dua variabel.
+- Boxplot sangat baik untuk menunjukkan sebaran data berdasarkan kuartil, termasuk median, outlier, dan rentang.
 
 Berdasarkan deskripsi dan sampel data, jenis bagan apa yang paling sesuai? Jelaskan alasan Anda.
 `,}

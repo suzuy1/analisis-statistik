@@ -46,7 +46,7 @@ export type SuggestChartTypeInput = z.infer<
 
 export const SuggestChartTypeOutputSchema = z.object({
   chartType: z
-    .enum(['histogram', 'pie chart', 'scatter plot'])
+    .enum(['histogram', 'pie chart', 'scatter plot', 'boxplot'])
     .describe('The suggested chart type for visualizing the data.'),
   reasoning: z
     .string()

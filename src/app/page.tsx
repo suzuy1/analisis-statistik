@@ -32,7 +32,7 @@ import { solveWordProblem } from "@/ai/flows/solve-word-problem";
 import { solveWordProblemFromImage } from "@/ai/flows/solve-word-problem-from-image";
 import type { SolveWordProblemOutput } from "@/ai/schemas/statviz-schemas";
 
-export type ChartType = "histogram" | "pie" | "scatter";
+export type ChartType = "histogram" | "pie" | "scatter" | "boxplot";
 export type InputMode = "data" | "problem";
 export type ProblemInputMode = "text" | "image";
 
@@ -186,14 +186,14 @@ export default function Home() {
             ]);
             
             if (chartSuggestion) {
-              const suggested = chartSuggestion.chartType.toLowerCase().replace(' chart', '').replace(' scatter plot', 'scatter').replace(' pie chart', 'pie');
+              const suggested = chartSuggestion.chartType.toLowerCase().replace(' chart', '').replace(' scatter plot', 'scatter').replace(' pie chart', 'pie').replace('boxplot', 'boxplot');
               setSuggestedChartType(chartSuggestion.chartType);
-              if (suggested === 'histogram' || suggested === 'pie' || suggested === 'scatter') {
+              if (['histogram', 'pie', 'scatter', 'boxplot'].includes(suggested)) {
                 if (suggested === 'scatter' && nonEmptyData.length < 2) {
                    // can't do scatter with one column, so fallback
                   setChartType('histogram');
                 } else {
-                  setChartType(suggested);
+                  setChartType(suggested as ChartType);
                 }
               }
             }
