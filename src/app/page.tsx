@@ -31,6 +31,7 @@ import { generateDataInsights } from "@/ai/flows/auto-generate-data-insights";
 import { solveWordProblem } from "@/ai/flows/solve-word-problem";
 import { solveWordProblemFromImage } from "@/ai/flows/solve-word-problem-from-image";
 import type { SolveWordProblemOutput } from "@/ai/schemas/statviz-schemas";
+import { DataTable } from "@/components/statviz/DataTable";
 
 export type ChartType = "histogram" | "pie" | "scatter" | "boxplot";
 export type InputMode = "data" | "problem";
@@ -332,22 +333,25 @@ export default function Home() {
                   )}
               </div>
             </div>
-            
+
             {inputMode === 'data' && (
-              <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-                <div className="lg:col-span-2">
-                  <VisualizationCard
-                    data={data}
-                    chartType={chartType}
-                    onChartTypeChange={setChartType}
-                    suggestedChartType={suggestedChartType}
-                    isProcessing={isProcessing || isAiRunning}
-                  />
+              <>
+                {data && data.length > 0 && data[0].length > 0 && <DataTable data={data} />}
+                <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+                  <div className="lg:col-span-2">
+                    <VisualizationCard
+                      data={data}
+                      chartType={chartType}
+                      onChartTypeChange={setChartType}
+                      suggestedChartType={suggestedChartType}
+                      isProcessing={isProcessing || isAiRunning}
+                    />
+                  </div>
+                  <div className="lg:col-span-1">
+                    <InsightsCard insights={insights} isLoading={isAiRunning} />
+                  </div>
                 </div>
-                <div className="lg:col-span-1">
-                  <InsightsCard insights={insights} isLoading={isAiRunning} />
-                </div>
-              </div>
+              </>
             )}
           </div>
         </div>
