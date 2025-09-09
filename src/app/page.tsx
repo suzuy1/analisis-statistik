@@ -25,10 +25,13 @@ import { StatisticsDisplay } from "@/components/statviz/StatisticsDisplay";
 import { VisualizationCard } from "@/components/statviz/VisualizationCard";
 import { InsightsCard } from "@/components/statviz/InsightsCard";
 import { StatvizIcon } from "@/components/icons/StatvizIcon";
+import { WordProblemCard } from "@/components/statviz/WordProblemCard";
 import { suggestChartType } from "@/ai/flows/suggest-chart-type";
 import { generateDataInsights } from "@/ai/flows/auto-generate-data-insights";
+import { solveWordProblem } from "@/ai/flows/solve-word-problem";
 
 export type ChartType = "histogram" | "pie" | "scatter";
+export type InputMode = "data" | "problem";
 
 export default function Home() {
   const [dataString, setDataString] = useState<string>("1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5");
@@ -42,6 +45,9 @@ export default function Home() {
   const [isProcessing, startProcessing] = useTransition();
   const [isAiRunning, startAiTasks] = useTransition();
   const { toast } = useToast();
+  const [inputMode, setInputMode] = useState<InputMode>("data");
+  const [wordProblemSolution, setWordProblemSolution] = useState<{ solution: string; answer: number } | null>(null);
+
 
   const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -64,11 +70,33 @@ export default function Home() {
 
   const processData = () => {
     startProcessing(() => {
-      try {
-        setStatistics(null);
-        setInsights(null);
-        setSuggestedChartType(null);
+      setStatistics(null);
+      setInsights(null);
+      setSuggestedChartType(null);
+      setWordProblemSolution(null);
+      setData([]);
 
+      if (inputMode === 'problem') {
+        if (!dataString.trim()) {
+          toast({ variant: "destructive", title: "Input Kosong", description: "Silakan masukkan soal cerita." });
+          return;
+        }
+        startAiTasks(async () => {
+          try {
+            const result = await solveWordProblem({ problem: dataString });
+            setWordProblemSolution(result);
+          } catch (aiError: any) {
+             toast({
+              variant: "destructive",
+              title: "Kesalahan Penyelesaian Soal",
+              description: aiError.message || "Gagal menyelesaikan soal cerita."
+            });
+          }
+        });
+        return;
+      }
+      
+      try {
         const rows = dataString.trim().split("\n");
         const parsedData = rows.map((row) =>
           row.split(",").map((val) => parseFloat(val.trim())).filter((num) => !isNaN(num))
@@ -220,7 +248,7 @@ export default function Home() {
                 Statistik & Visualisasi Interaktif
               </h2>
               <p className="mt-2 text-lg text-muted-foreground">
-                Masukkan data Anda untuk langsung menghitung statistik utama dan memvisualisasikan kumpulan data Anda.
+                Masukkan data mentah atau soal cerita untuk langsung mendapatkan analisis statistik.
               </p>
             </div>
 
@@ -232,41 +260,47 @@ export default function Home() {
                   onFileUpload={handleFileUpload}
                   onProcess={processData}
                   isProcessing={isProcessing}
+                  inputMode={inputMode}
+                  setInputMode={setInputMode}
                 />
               </div>
 
               <div className="lg:col-span-2">
-                 {(isProcessing && !statistics) ? (
+                 {(isProcessing || isAiRunning) && !statistics && !wordProblemSolution ? (
                    <div className="flex items-center justify-center h-full rounded-lg border-2 border-dashed">
                       <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                     </div>
                   ) : statistics ? (
                     <StatisticsDisplay stats={statistics} />
+                  ) : wordProblemSolution ? (
+                    <WordProblemCard solution={wordProblemSolution.solution} answer={wordProblemSolution.answer} />
                   ) : (
                     <div className="flex items-center justify-center h-full rounded-lg border-2 border-dashed bg-card/50">
                       <div className="text-center text-muted-foreground">
-                        <p className="font-semibold">Statistik Anda akan muncul di sini.</p>
-                        <p className="text-sm">Masukkan data dan klik "Proses Data" untuk memulai.</p>
+                        <p className="font-semibold">Hasil Anda akan muncul di sini.</p>
+                        <p className="text-sm">Masukkan data atau soal, lalu klik "Proses" untuk memulai.</p>
                       </div>
                     </div>
                   )}
               </div>
             </div>
-
-            <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-              <div className="lg:col-span-2">
-                <VisualizationCard
-                  data={data}
-                  chartType={chartType}
-                  onChartTypeChange={setChartType}
-                  suggestedChartType={suggestedChartType}
-                  isProcessing={isProcessing || isAiRunning}
-                />
+            
+            {inputMode === 'data' && (
+              <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+                <div className="lg:col-span-2">
+                  <VisualizationCard
+                    data={data}
+                    chartType={chartType}
+                    onChartTypeChange={setChartType}
+                    suggestedChartType={suggestedChartType}
+                    isProcessing={isProcessing || isAiRunning}
+                  />
+                </div>
+                <div className="lg:col-span-1">
+                  <InsightsCard insights={insights} isLoading={isAiRunning} />
+                </div>
               </div>
-              <div className="lg:col-span-1">
-                 <InsightsCard insights={insights} isLoading={isAiRunning} />
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </main>
@@ -280,3 +314,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
