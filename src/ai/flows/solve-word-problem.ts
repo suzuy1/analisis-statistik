@@ -3,23 +3,15 @@
  * @fileOverview Solves a statistical word problem.
  *
  * - solveWordProblem - A function that solves the input word problem.
- * - SolveWordProblemInput - The input type for the solveWordProblem function.
- * - SolveWordProblemOutput - The return type for the solveWordProblem function.
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
-
-const SolveWordProblemInputSchema = z.object({
-  problem: z.string().describe('The statistical word problem to be solved.'),
-});
-export type SolveWordProblemInput = z.infer<typeof SolveWordProblemInputSchema>;
-
-const SolveWordProblemOutputSchema = z.object({
-  solution: z.string().describe('A step-by-step explanation of how the problem was solved.'),
-  answer: z.number().describe('The final numerical answer to the problem.'),
-});
-export type SolveWordProblemOutput = z.infer<typeof SolveWordProblemOutputSchema>;
+import {
+  SolveWordProblemInputSchema,
+  SolveWordProblemOutputSchema,
+  type SolveWordProblemInput,
+  type SolveWordProblemOutput,
+} from '@/ai/schemas/statviz-schemas';
 
 export async function solveWordProblem(
   input: SolveWordProblemInput
@@ -53,5 +45,3 @@ const solveWordProblemFlow = ai.defineFlow(
     return output!;
   }
 );
-
-    

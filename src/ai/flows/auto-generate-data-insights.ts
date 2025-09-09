@@ -3,29 +3,16 @@
  * @fileOverview Generates insights from statistical data.
  *
  * - generateDataInsights - A function that generates insights from the input data.
- * - GenerateDataInsightsInput - The input type for the generateDataInsights function.
- * - GenerateDataInsightsOutput - The return type for the generateDataInsights function.
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import {
+  GenerateDataInsightsInputSchema,
+  GenerateDataInsightsOutputSchema,
+  type GenerateDataInsightsInput,
+  type GenerateDataInsightsOutput,
+} from '@/ai/schemas/statviz-schemas';
 
-const GenerateDataInsightsInputSchema = z.object({
-  dataSummary: z
-    .string()
-    .describe(
-      'A summary of the statistical data including mean, median, mode, standard deviation, and variance.'
-    ),
-  visualizationType: z
-    .string()
-    .describe('Type of visualization used e.g. histogram, pie chart'),
-});
-export type GenerateDataInsightsInput = z.infer<typeof GenerateDataInsightsInputSchema>;
-
-const GenerateDataInsightsOutputSchema = z.object({
-  insights: z.string().describe('Generated insights from the statistical data.'),
-});
-export type GenerateDataInsightsOutput = z.infer<typeof GenerateDataInsightsOutputSchema>;
 
 export async function generateDataInsights(
   input: GenerateDataInsightsInput

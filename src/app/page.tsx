@@ -29,9 +29,12 @@ import { WordProblemCard } from "@/components/statviz/WordProblemCard";
 import { suggestChartType } from "@/ai/flows/suggest-chart-type";
 import { generateDataInsights } from "@/ai/flows/auto-generate-data-insights";
 import { solveWordProblem } from "@/ai/flows/solve-word-problem";
+import { solveWordProblemFromImage } from "@/ai/flows/solve-word-problem-from-image";
+import type { SolveWordProblemOutput } from "@/ai/schemas/statviz-schemas";
 
 export type ChartType = "histogram" | "pie" | "scatter";
 export type InputMode = "data" | "problem";
+export type ProblemInputMode = "text" | "image";
 
 export default function Home() {
   const [dataString, setDataString] = useState<string>("1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5");
@@ -46,7 +49,9 @@ export default function Home() {
   const [isAiRunning, startAiTasks] = useTransition();
   const { toast } = useToast();
   const [inputMode, setInputMode] = useState<InputMode>("data");
-  const [wordProblemSolution, setWordProblemSolution] = useState<{ solution: string; answer: number } | null>(null);
+  const [problemInputMode, setProblemInputMode] = useState<ProblemInputMode>("text");
+  const [wordProblemSolution, setWordProblemSolution] = useState<SolveWordProblemOutput | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
 
   const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
@@ -68,6 +73,13 @@ export default function Home() {
     }
   };
 
+  const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+    }
+  }
+
   const processData = () => {
     startProcessing(() => {
       setStatistics(null);
@@ -77,14 +89,43 @@ export default function Home() {
       setData([]);
 
       if (inputMode === 'problem') {
-        if (!dataString.trim()) {
-          toast({ variant: "destructive", title: "Input Kosong", description: "Silakan masukkan soal cerita." });
-          return;
-        }
         startAiTasks(async () => {
           try {
-            const result = await solveWordProblem({ problem: dataString });
-            setWordProblemSolution(result);
+             if (problemInputMode === 'text') {
+              if (!dataString.trim()) {
+                toast({ variant: "destructive", title: "Input Kosong", description: "Silakan masukkan soal cerita." });
+                return;
+              }
+              const result = await solveWordProblem({ problem: dataString });
+              setWordProblemSolution(result);
+            } else if (problemInputMode === 'image') {
+              if (!imageFile) {
+                toast({ variant: "destructive", title: "Input Kosong", description: "Silakan unggah gambar soal cerita." });
+                return;
+              }
+              const reader = new FileReader();
+              reader.readAsDataURL(imageFile);
+              reader.onload = async () => {
+                const photoDataUri = reader.result as string;
+                try {
+                  const result = await solveWordProblemFromImage({ photoDataUri });
+                  setWordProblemSolution(result);
+                } catch (aiError: any) {
+                  toast({
+                    variant: "destructive",
+                    title: "Kesalahan Penyelesaian Soal dari Gambar",
+                    description: aiError.message || "Gagal memproses gambar."
+                  });
+                }
+              };
+              reader.onerror = (error) => {
+                toast({
+                  variant: "destructive",
+                  title: "Kesalahan Membaca File",
+                  description: "Tidak dapat membaca file gambar yang dipilih."
+                });
+              };
+            }
           } catch (aiError: any) {
              toast({
               variant: "destructive",
@@ -191,7 +232,7 @@ export default function Home() {
         const canvas = await html2canvas(content, {
           scale: 2,
           useCORS: true,
-          backgroundColor: "#F0F0F0", // Match background
+          backgroundColor: "#111", // Match dark background
         });
         const imgData = canvas.toDataURL("image/png");
 
@@ -258,10 +299,14 @@ export default function Home() {
                   dataString={dataString}
                   setDataString={setDataString}
                   onFileUpload={handleFileUpload}
+                  onImageUpload={handleImageUpload}
                   onProcess={processData}
                   isProcessing={isProcessing}
                   inputMode={inputMode}
                   setInputMode={setInputMode}
+                  problemInputMode={problemInputMode}
+                  setProblemInputMode={setProblemInputMode}
+                  imageFile={imageFile}
                 />
               </div>
 
@@ -314,5 +359,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
