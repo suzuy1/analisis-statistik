@@ -1,3 +1,4 @@
+
 "use client";
 import * as React from "react";
 import {
@@ -183,7 +184,7 @@ export function VisualizationCard({ data, chartType, onChartTypeChange, suggeste
   };
 
   return (
-    <Card className="h-full flex flex-col">
+    <Card className="h-full flex flex-col" id="visualization-card">
       <CardHeader>
         <div className="flex justify-between items-start">
             <div>

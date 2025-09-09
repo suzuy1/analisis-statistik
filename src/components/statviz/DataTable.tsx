@@ -1,3 +1,4 @@
+
 import {
   Table,
   TableBody,
@@ -25,7 +26,7 @@ export function DataTable({ data }: DataTableProps) {
   const headers = Array.from({ length: maxCols }, (_, i) => `Kolom ${i + 1}`);
 
   return (
-    <Card>
+    <Card id="data-table-card">
       <CardHeader>
         <CardTitle>Tabel Data</CardTitle>
         <CardDescription>Tampilan data mentah yang Anda masukkan.</CardDescription>

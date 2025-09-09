@@ -1,9 +1,12 @@
+
 "use client";
 
 import { useState, useTransition } from "react";
 import type { ChangeEvent } from "react";
 import Papa from "papaparse";
 import { Loader2 } from "lucide-react";
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
 
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -224,46 +227,126 @@ export default function Home() {
   };
 
   const handleExport = async () => {
-    const { default: jspdf } = await import("jspdf");
-    const { default: html2canvas } = await import("html2canvas");
+    if (!statistics && !wordProblemSolution) {
+      toast({
+        variant: "destructive",
+        title: "Tidak Ada Data untuk Diekspor",
+        description: "Silakan proses data atau soal cerita terlebih dahulu.",
+      });
+      return;
+    }
 
-    const content = document.getElementById("pdf-export");
-    if (content) {
-      try {
-        toast({ title: "Membuat PDF...", description: "Mohon tunggu sebentar." });
-        const canvas = await html2canvas(content, {
-          scale: 2,
-          useCORS: true,
-          backgroundColor: "#111", // Match dark background
-        });
-        const imgData = canvas.toDataURL("image/png");
+    toast({ title: "Membuat PDF...", description: "Mohon tunggu sebentar." });
 
-        const pdf = new jspdf("p", "mm", "a4");
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
-        const imgWidth = canvas.width;
-        const imgHeight = canvas.height;
-        const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+    try {
+      const pdf = new jsPDF("p", "mm", "a4");
+      let yPos = 20;
 
-        const imgX = (pdfWidth - imgWidth * ratio) / 2;
-        const imgY = 10;
+      pdf.setFontSize(22);
+      pdf.text("Laporan Analisis StatViz", 105, yPos, { align: "center" });
+      yPos += 15;
 
-        pdf.addImage(
-          imgData,
-          "PNG",
-          imgX,
-          imgY,
-          imgWidth * ratio,
-          imgHeight * ratio
-        );
-        pdf.save("laporan-statviz.pdf");
-      } catch (error: any) {
-        toast({
-          variant: "destructive",
-          title: "Kesalahan Ekspor PDF",
-          description: error.message || "Tidak dapat membuat PDF.",
-        });
+      if (statistics) {
+        pdf.setFontSize(16);
+        pdf.text("Ringkasan Statistik", 14, yPos);
+        yPos += 8;
+
+        pdf.setFontSize(11);
+        const statsContent = [
+            `Rata-rata: ${statistics.mean.toFixed(2)}`,
+            `Median: ${statistics.median.toFixed(2)}`,
+            `Modus: ${statistics.mode.length > 0 ? statistics.mode.join(", ") : "N/A"}`,
+            `Jumlah Data: ${statistics.count}`,
+            `Rentang: ${statistics.range.toFixed(2)}`,
+            `Varians: ${statistics.variance.toFixed(2)}`,
+            `Deviasi Standar: ${statistics.stdDev.toFixed(2)}`,
+            `Kuartil 1 (Q1): ${statistics.q1.toFixed(2)}`,
+            `Kuartil 3 (Q3): ${statistics.q3.toFixed(2)}`,
+            `Rentang Interkuartil (IQR): ${statistics.iqr.toFixed(2)}`,
+        ];
+        pdf.text(statsContent, 14, yPos, { lineHeightFactor: 1.5 });
+        yPos += statsContent.length * 5 + 10;
       }
+      
+      if (wordProblemSolution) {
+        pdf.setFontSize(16);
+        pdf.text("Solusi Soal Cerita", 14, yPos);
+        yPos += 8;
+        
+        pdf.setFontSize(11);
+        const splitSolution = pdf.splitTextToSize(wordProblemSolution.solution, 180);
+        pdf.text(splitSolution, 14, yPos);
+        yPos += splitSolution.length * 5 + 5;
+        
+        pdf.setFontSize(14);
+        pdf.text(`Jawaban Akhir: ${wordProblemSolution.answer}`, 14, yPos);
+        yPos += 15;
+      }
+
+      if (insights) {
+          yPos = Math.max(yPos, 80); // Ensure insights start at a consistent position if stats are short
+          pdf.setFontSize(16);
+          pdf.text("Wawasan Data (AI)", 14, yPos);
+          yPos += 8;
+
+          pdf.setFontSize(11);
+          const splitInsights = pdf.splitTextToSize(insights, 180);
+          pdf.text(splitInsights, 14, yPos);
+          yPos += splitInsights.length * 4 + 10;
+      }
+
+      const chartElement = document.getElementById('visualization-card');
+      if (chartElement && statistics) {
+          const canvas = await html2canvas(chartElement, { scale: 2, backgroundColor: '#111111' });
+          const imgData = canvas.toDataURL('image/png');
+          
+          yPos += 5;
+          if (yPos > 200) { // Add new page if content is too long
+              pdf.addPage();
+              yPos = 20;
+          }
+
+          pdf.setFontSize(16);
+          pdf.text("Visualisasi Data", 14, yPos);
+          yPos += 10;
+
+          const imgProps = pdf.getImageProperties(imgData);
+          const pdfWidth = 180;
+          const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+          pdf.addImage(imgData, 'PNG', 14, yPos, pdfWidth, pdfHeight);
+          yPos += pdfHeight + 10;
+      }
+
+      const tableElement = document.getElementById('data-table-card');
+      if (tableElement && statistics) {
+          if (yPos > 180) {
+              pdf.addPage();
+              yPos = 20;
+          }
+          pdf.setFontSize(16);
+          pdf.text("Data Mentah", 14, yPos);
+          yPos += 10;
+          
+          // Using autoTable is much better, but requires adding a new library.
+          // For now, we'll use html2canvas on the table as a fallback.
+          const tableCanvas = await html2canvas(tableElement.querySelector('table')!, { scale: 2, backgroundColor: '#111111' });
+          const tableImgData = tableCanvas.toDataURL('image/png');
+          
+          const imgProps = pdf.getImageProperties(tableImgData);
+          const pdfWidth = 180;
+          const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+          pdf.addImage(tableImgData, 'PNG', 14, yPos, pdfWidth, pdfHeight);
+      }
+
+
+      pdf.save("laporan-statviz.pdf");
+      toast({ title: "PDF berhasil dibuat!", description: "Laporan Anda telah diunduh." });
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Kesalahan Ekspor PDF",
+        description: error.message || "Tidak dapat membuat PDF.",
+      });
     }
   };
 
