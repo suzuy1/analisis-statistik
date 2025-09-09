@@ -1,135 +1,115 @@
-<p align="center">
-<img src="https://www.google.com/search?q=https://raw.githubusercontent.com/suzuy/analisis-statistik/main/.github/icon.png" alt="StatViz Logo" width="120">
-</p>
 
-<h1 align="center">
-StatViz: Kalkulator & Visualisator Statistik Bertenaga AI
-</h1>
+# StatViz: Kalkulator & Visualisator Statistik Bertenaga AI
 
-<p align="center">
 Ubah data mentah dan soal cerita statistik menjadi wawasan yang dapat ditindaklanjuti dengan mudah.
-</p>
 
 <p align="center">
-<a href="https://www.google.com/search?q=https://github.com/suzuy/analisis-statistik/blob/main/LICENSE"><img src="https://www.google.com/search?q=https://img.shields.io/badge/license-MIT-blue.svg" alt="Lisensi"></a>
-<a href="https://www.google.com/search?q=https://github.com/suzuy/analisis-statistik"><img src="https://www.google.com/search?q=https://img.shields.io/github/stars/suzuy/analisis-statistik%3Fstyle%3Dsocial" alt="Bintang GitHub"></a>
+  <a href="https://github.com/suzuy1/analisis-statistik/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
+  <a href="https://github.com/suzuy1/analisis-statistik"><img src="https://img.shields.io/github/stars/suzuy1/analisis-statistik?style=social" alt="GitHub stars"></a>
 </p>
 
-StatViz adalah aplikasi web canggih yang dirancang untuk membuat analisis statistik menjadi mudah diakses, intuitif, dan interaktif. Dibangun dengan tumpukan teknologi modern, aplikasi ini memberdayakan semua orang, mulai dari pelajar hingga profesional, untuk dengan mudah memasukkan data, melakukan perhitungan statistik yang komprehensif, memvisualisasikan hasil, dan mendapatkan wawasan canggih yang didukung oleh Kecerdasan Buatan.
+---
 
-✨ Fitur Utama
-🔢 Input Data Fleksibel:
+## ✨ Fitur Utama
 
-Manual: Masukkan atau tempel data numerik secara langsung.
+- **Input Data Fleksibel:**
+  - **Manual:** Masukkan atau tempel data numerik secara langsung.
+  - **Unggah CSV:** Impor dataset dengan mudah menggunakan file CSV.
+  - **Soal Cerita (Teks):** Ketik atau tempel soal cerita statistik, dan biarkan AI menyelesaikannya secara rinci.
+  - **Soal Cerita (Gambar):** Unggah gambar soal cerita, dan AI akan menganalisis serta memberikan solusi.
 
-Unggah CSV: Impor dataset dengan mudah menggunakan file CSV.
+- **Analisis Statistik Komprehensif:**
+  - Hitung metrik deskriptif seperti: Mean, Median, Modus, Varians, Standar Deviasi, Range, Kuartil (Q1, Q3), IQR, dll.
 
-Soal Cerita (Teks): Ketik atau tempel soal cerita statistik, dan biarkan AI menyelesaikannya secara rinci.
+- **Kecerdasan Buatan (AI) Terintegrasi:**
+  - **Penyelesai Soal Cerita:** Solusi langkah demi langkah untuk soal statistik berbasis teks/gambar.
+  - **Saran Visualisasi Cerdas:** Rekomendasi otomatis jenis grafik terbaik (Histogram, Pie, Scatter, Box Plot, dsb).
+  - **Wawasan Otomatis:** Ringkasan dan insight data/statistik secara otomatis.
 
-Soal Cerita (Gambar): Unggah gambar soal cerita, dan AI akan menganalisis dan memberikan solusinya.
+- **Visualisasi Data Interaktif:**
+  - Pilihan berbagai tipe grafik, lengkap dengan tooltip untuk eksplorasi data.
 
-📊 Analisis Statistik Komprehensif:
+- **Ekspor ke PDF:**
+  - Hasil analisis, insight AI, dan visualisasi dapat diekspor ke PDF profesional.
 
-Hitung berbagai metrik statistik deskriptif secara instan: Rata-rata (Mean), Median, Modus, Varians, Deviasi Standar, Rentang (Range), Kuartil (Q1, Q3), dan Rentang Interkuartil (IQR).
+---
 
-🤖 Kecerdasan Buatan (AI) Terintegrasi:
+## 🚀 Tumpukan Teknologi
 
-Penyelesai Soal Cerita: Dapatkan solusi langkah demi langkah untuk soal statistik yang diberikan dalam bentuk teks atau gambar.
+| Kategori         | Teknologi                      |
+|------------------|-------------------------------|
+| Framework        | Next.js, Genkit               |
+| Bahasa           | JavaScript/TypeScript         |
+| AI & GenAI       | Google Generative AI (Gemini) |
+| Styling & UI     | Tailwind CSS, Headless UI     |
+| Visualisasi Data | Chart.js, d3.js               |
+| Utilitas         | dotenv, csv-parser, dsb       |
 
-Saran Visualisasi Cerdas: Terima rekomendasi otomatis untuk jenis bagan yang paling sesuai (Histogram, Diagram Lingkaran, Plot Sebar, atau Box Plot) berdasarkan sifat data Anda.
+---
 
-Wawasan Otomatis: Hasilkan ringkasan dan wawasan kunci dari data dan statistik Anda secara otomatis.
+## 🏁 Memulai
 
-📈 Visualisasi Data Interaktif:
+### Prasyarat
 
-Pilih dari berbagai jenis bagan untuk memvisualisasikan data Anda.
+- Node.js versi **18.18.0** atau lebih baru
 
-Bagan interaktif dengan tooltip untuk eksplorasi data yang lebih mendalam.
+### Instalasi
 
-📄 Ekspor ke PDF:
+1. **Kloning repositori:**
+    ```bash
+    git clone https://github.com/suzuy1/analisis-statistik.git
+    cd analisis-statistik
+    ```
 
-Hasilkan laporan PDF yang rapi dan profesional dari analisis Anda, lengkap dengan ringkasan statistik, wawasan AI, visualisasi data, dan tabel data mentah dengan sekali klik.
+2. **Instal dependensi:**
+    ```bash
+    npm install
+    ```
 
-🚀 Tumpukan Teknologi
-StatViz dibangun menggunakan serangkaian teknologi modern untuk memberikan pengalaman pengguna yang mulus dan kuat.
+3. **Siapkan variabel lingkungan:**
+    - Buat file `.env.local` di root project
+    - Tambahkan API Key Google:
+      ```
+      GOOGLE_API_KEY="AIzaSy..."
+      ```
 
-Kategori
+4. **Jalankan server pengembangan:**
+    ```bash
+    npm run dev
+    ```
+    - Aplikasi web dan backend AI berjalan bersamaan.
+    - Buka [http://localhost:9002](http://localhost:9002) di browser.
 
-Teknologi
+---
 
-Framework
+## 📜 Skrip yang Tersedia
 
+- `npm run dev` – Memulai server pengembangan Next.js & Genkit
+- `npm run build` – Build aplikasi untuk produksi
+- `npm start` – Menjalankan aplikasi hasil build
+- `npm run lint` – Menjalankan linter untuk cek masalah kode
 
+---
 
-Bahasa
+## 🤝 Kontribusi
 
+Kontribusi sangat terbuka!  
+Jika punya ide fitur baru atau menemukan bug:
+1. Fork repositori ini
+2. Buat branch fitur baru  
+   `git checkout -b fitur/fitur-keren`
+3. Commit perubahan  
+   `git commit -m 'Menambahkan fitur keren'`
+4. Push ke branch  
+   `git push origin fitur/fitur-keren`
+5. Buka Pull Request
 
+---
 
-AI & GenAI
+## 📄 Lisensi
 
+Proyek ini dilisensikan di bawah [MIT License](./LICENSE).
 
+---
 
-Styling & UI
-
-
-
-Visualisasi Data
-
-
-
-Utilitas
-
-
-
-🏁 Memulai
-Untuk menjalankan proyek ini secara lokal, ikuti langkah-langkah berikut:
-
-Prasyarat
-Pastikan Anda memiliki Node.js versi 18.18.0 atau yang lebih baru terinstal di mesin Anda.
-
-Instalasi
-Kloning repositori:
-
-git clone [https://github.com/suzuy/analisis-statistik.git](https://github.com/suzuy/analisis-statistik.git)
-cd analisis-statistik
-
-Instal dependensi:
-
-npm install
-
-Siapkan variabel lingkungan:
-Buat file .env.local di direktori root dan tambahkan GOOGLE_API_KEY Anda untuk mengaktifkan fitur AI.
-
-GOOGLE_API_KEY="AIzaSy..."
-
-Jalankan server pengembangan:
-Aplikasi web dan backend AI akan berjalan secara bersamaan.
-
-npm run dev
-
-Buka http://localhost:9002 di browser Anda untuk melihat aplikasi.
-
-📜 Skrip yang Tersedia
-npm run dev: Memulai server pengembangan Next.js dan Genkit.
-
-npm run build: Mem-build aplikasi untuk produksi.
-
-npm start: Menjalankan aplikasi yang sudah di-build.
-
-npm run lint: Menjalankan linter untuk memeriksa masalah kode.
-
-🤝 Berkontribusi
-Kontribusi sangat kami harapkan! Jika Anda memiliki ide untuk fitur baru atau menemukan bug, silakan buka issue atau kirimkan pull request.
-
-Fork repositori ini.
-
-Buat branch fitur baru (git checkout -b fitur/fitur-keren).
-
-Commit perubahan Anda (git commit -m 'Menambahkan fitur keren').
-
-Push ke branch tersebut (git push origin fitur/fitur-keren).
-
-Buka Pull Request.
-
-📄 Lisensi
-Proyek ini dilisensikan di bawah Lisensi MIT. Lihat file LICENSE untuk detail lebih lanjut.
+<sub>Logo statistik diambil dari [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Statistics_icon.svg) (public domain). Bisa diganti dengan logo buatan sendiri jika tersedia.</sub>
