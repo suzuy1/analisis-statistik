@@ -21,6 +21,8 @@ interface DataInputCardProps {
   problemInputMode: ProblemInputMode;
   setProblemInputMode: Dispatch<SetStateAction<ProblemInputMode>>;
   imageFile: File | null;
+  imageDescription: string;
+  setImageDescription: Dispatch<SetStateAction<string>>;
 }
 
 export function DataInputCard({ 
@@ -34,7 +36,9 @@ export function DataInputCard({
   setInputMode,
   problemInputMode,
   setProblemInputMode,
-  imageFile
+  imageFile,
+  imageDescription,
+  setImageDescription
 }: DataInputCardProps) {
   
   const handleModeChange = (value: string) => {
@@ -115,8 +119,8 @@ export function DataInputCard({
                 className="mt-2 min-h-[200px]"
               />
             </TabsContent>
-            <TabsContent value="image" className="mt-4 flex-grow flex flex-col items-center justify-center">
-              <Label htmlFor="image-file" className="cursor-pointer border-2 border-dashed border-muted-foreground/50 rounded-lg p-8 text-center w-full hover:bg-muted/50 transition-colors">
+            <TabsContent value="image" className="mt-4 flex-grow flex flex-col">
+               <Label htmlFor="image-file" className="cursor-pointer border-2 border-dashed border-muted-foreground/50 rounded-lg p-8 text-center w-full hover:bg-muted/50 transition-colors">
                 <div className="flex flex-col items-center gap-2 text-muted-foreground">
                   <ImageIcon className="h-10 w-10" />
                   <span>{imageFile ? imageFile.name : 'Klik untuk mengunggah gambar'}</span>
@@ -130,6 +134,18 @@ export function DataInputCard({
                 className="mt-2 sr-only"
               />
                {imageFile && <p className="mt-2 text-sm text-muted-foreground">File dipilih: {imageFile.name}</p>}
+
+              <div className="w-full mt-4">
+                <Label htmlFor="image-description">Deskripsi Gambar (Opsional)</Label>
+                <Textarea
+                  id="image-description"
+                  placeholder="Berikan konteks atau deskripsi tambahan untuk gambar..."
+                  value={imageDescription}
+                  onChange={(e) => setImageDescription(e.target.value)}
+                  className="mt-2"
+                />
+              </div>
+
                <p className="mt-4 text-xs text-muted-foreground text-center">
                 Pastikan gambar soal terlihat jelas untuk hasil terbaik.
               </p>

@@ -21,6 +21,7 @@ export const SolveWordProblemFromImageInputSchema = z.object({
     .describe(
       "A photo of a word problem, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
+  description: z.string().optional().describe('An optional description or context for the word problem in the image.'),
 });
 export type SolveWordProblemFromImageInput = z.infer<
   typeof SolveWordProblemFromImageInputSchema

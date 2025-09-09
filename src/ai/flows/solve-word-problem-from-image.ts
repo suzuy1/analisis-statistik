@@ -30,6 +30,12 @@ The user is from Indonesia, so please provide the solution in Bahasa Indonesia.
 Word Problem Image:
 {{media url=photoDataUri}}
 
+{{#if description}}
+User-provided description:
+"{{{description}}}"
+Use this description as additional context to understand the problem in the image.
+{{/if}}
+
 Analyze the problem in the image, identify the given values, determine the steps needed, perform the calculations, and state the final answer.
 `,
 });

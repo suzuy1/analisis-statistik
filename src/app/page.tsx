@@ -52,6 +52,7 @@ export default function Home() {
   const [problemInputMode, setProblemInputMode] = useState<ProblemInputMode>("text");
   const [wordProblemSolution, setWordProblemSolution] = useState<SolveWordProblemOutput | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageDescription, setImageDescription] = useState<string>("");
 
 
   const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
@@ -108,7 +109,7 @@ export default function Home() {
               reader.onload = async () => {
                 const photoDataUri = reader.result as string;
                 try {
-                  const result = await solveWordProblemFromImage({ photoDataUri });
+                  const result = await solveWordProblemFromImage({ photoDataUri, description: imageDescription });
                   setWordProblemSolution(result);
                 } catch (aiError: any) {
                   toast({
@@ -307,6 +308,8 @@ export default function Home() {
                   problemInputMode={problemInputMode}
                   setProblemInputMode={setProblemInputMode}
                   imageFile={imageFile}
+                  imageDescription={imageDescription}
+                  setImageDescription={setImageDescription}
                 />
               </div>
 
