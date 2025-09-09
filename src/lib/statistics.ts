@@ -5,6 +5,10 @@ export interface Statistics {
   variance: number;
   stdDev: number;
   count: number;
+  range: number;
+  q1: number;
+  q3: number;
+  iqr: number;
 }
 
 const cleanData = (data: number[]): number[] => {
@@ -73,4 +77,35 @@ export const calculateStdDev = (data: number[]): number => {
   const nums = cleanData(data);
   if (nums.length < 2) return 0;
   return Math.sqrt(calculateVariance(nums));
+};
+
+const quantile = (sortedData: number[], q: number): number => {
+  const pos = (sortedData.length - 1) * q;
+  const base = Math.floor(pos);
+  const rest = pos - base;
+  if (sortedData[base + 1] !== undefined) {
+    return sortedData[base] + rest * (sortedData[base + 1] - sortedData[base]);
+  } else {
+    return sortedData[base];
+  }
+};
+
+export const calculateQuartiles = (data: number[]): { q1: number, q3: number } => {
+  const nums = cleanData(data);
+  if (nums.length < 2) return { q1: 0, q3: 0 };
+  const sorted = [...nums].sort((a, b) => a - b);
+  const q1 = quantile(sorted, 0.25);
+  const q3 = quantile(sorted, 0.75);
+  return { q1, q3 };
+};
+
+export const calculateRange = (data: number[]): number => {
+    const nums = cleanData(data);
+    if (nums.length === 0) return 0;
+    return Math.max(...nums) - Math.min(...nums);
+};
+
+export const calculateIQR = (data: number[]): number => {
+    const { q1, q3 } = calculateQuartiles(data);
+    return q3 - q1;
 };

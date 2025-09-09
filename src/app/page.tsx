@@ -14,6 +14,9 @@ import {
   calculateMode,
   calculateStdDev,
   calculateVariance,
+  calculateRange,
+  calculateQuartiles,
+  calculateIQR,
 } from "@/lib/statistics";
 import type { Statistics } from "@/lib/statistics";
 
@@ -80,6 +83,7 @@ export default function Home() {
         setData(nonEmptyData);
 
         const flatData = nonEmptyData.flat();
+        const { q1, q3 } = calculateQuartiles(flatData);
 
         const stats: Statistics = {
           mean: calculateMean(flatData),
@@ -88,6 +92,10 @@ export default function Home() {
           variance: calculateVariance(flatData),
           stdDev: calculateStdDev(flatData),
           count: flatData.length,
+          range: calculateRange(flatData),
+          q1: q1,
+          q3: q3,
+          iqr: calculateIQR(flatData),
         };
         setStatistics(stats);
 
@@ -99,7 +107,7 @@ export default function Home() {
             });
 
             const insightsPromise = generateDataInsights({
-              dataSummary: `Rata-rata: ${stats.mean.toFixed(2)}, Median: ${stats.median}, Modus: ${stats.mode.join(", ")}, Deviasi Standar: ${stats.stdDev.toFixed(2)}, Varians: ${stats.variance.toFixed(2)}. Total ${stats.count} titik data.`,
+              dataSummary: `Rata-rata: ${stats.mean.toFixed(2)}, Median: ${stats.median}, Modus: ${stats.mode.join(", ")}, Deviasi Standar: ${stats.stdDev.toFixed(2)}, Varians: ${stats.variance.toFixed(2)}, Rentang: ${stats.range.toFixed(2)}, Q1: ${stats.q1.toFixed(2)}, Q3: ${stats.q3.toFixed(2)}, IQR: ${stats.iqr.toFixed(2)}. Total ${stats.count} titik data.`,
               visualizationType: chartType,
             });
 
