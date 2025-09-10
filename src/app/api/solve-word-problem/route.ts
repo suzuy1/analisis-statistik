@@ -2,6 +2,8 @@
 import {NextRequest, NextResponse} from 'next/server';
 import {solveWordProblem} from '@/ai/flows/solve-word-problem';
 
+export const runtime = 'edge';
+
 export async function POST(req: NextRequest) {
   try {
     const {problem} = await req.json();
